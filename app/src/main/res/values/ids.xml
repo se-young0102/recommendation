@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="imageViewCover" type="id" />
+    <item name="buttonSelectImage" type="id" />
+    <item name="editTextTitle" type="id" />
+    <item name="editTextContent" type="id" />
+    <item name="buttonSubmit" type="id" />
+</resources>
