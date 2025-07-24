@@ -67,11 +67,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="사진 수정"
-        tools:layout_editor_absoluteX="112dp"
-        tools:layout_editor_absoluteY="185dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

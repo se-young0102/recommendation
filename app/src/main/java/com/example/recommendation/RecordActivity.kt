@@ -13,6 +13,7 @@ class RecordActivity : AppCompatActivity() {
 
     private lateinit var imageViewCover: ImageView
     private val REQUEST_CODE_PICK_IMAGE = 1001
+    private var selectedImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +21,7 @@ class RecordActivity : AppCompatActivity() {
 
         imageViewCover = findViewById(R.id.imageViewCover)
         val buttonSelectImage = findViewById<Button>(R.id.buttonSelectImage)
-        val buttonSubmit = findViewById<Button>(R.id.buttonSubmit) // 입력하기 버튼
+        val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
 
         buttonSelectImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK).apply {
@@ -29,9 +30,20 @@ class RecordActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
         }
 
-        // ✅ 입력하기 버튼 누르면 Toast 메시지 띄우기
         buttonSubmit.setOnClickListener {
-            Toast.makeText(this, "입력되었습니다", Toast.LENGTH_SHORT).show()
+            if (selectedImageUri != null) {
+                // SharedPreferences에 이미지 URI 저장
+                val prefs = getSharedPreferences("book_pref", MODE_PRIVATE)
+                prefs.edit().putString("book_cover_uri", selectedImageUri.toString()).apply()
+
+                Toast.makeText(this, "입력되었습니다", Toast.LENGTH_SHORT).show()
+
+                // BookData 화면으로 이동
+                val intent = Intent(this, BookData::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this, "책 표지를 먼저 선택해주세요", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -39,7 +51,7 @@ class RecordActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            val selectedImageUri: Uri? = data?.data
+            selectedImageUri = data?.data
             if (selectedImageUri != null) {
                 imageViewCover.setImageURI(selectedImageUri)
             }
