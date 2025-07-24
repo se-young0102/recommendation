@@ -7,12 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- 기록하기 버튼 -->
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="기록하기"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="341dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="32dp" />
+
+    <!-- 확인하기 버튼 -->
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="확인하기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

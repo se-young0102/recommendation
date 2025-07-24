@@ -6,6 +6,7 @@
     android:padding="16dp">
 
     <!-- 책 사진 선택 (ImageView + 버튼) -->
+
     <ImageView
         android:id="@+id/imageViewCover"
         android:layout_width="120dp"
