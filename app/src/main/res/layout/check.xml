@@ -1,17 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/imageViewCheckCover"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:scaleType="fitCenter"
-        android:contentDescription="책 표지"/>
+    <!-- 여기에 자식 뷰를 배치하세요 -->
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="115dp"
+        android:layout_height="113dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_book_24"
+        tools:layout_editor_absoluteY="109dp" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="115dp"
+        android:layout_height="113dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_book_24"
+        tools:layout_editor_absoluteY="252dp" />
+
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="115dp"
+        android:layout_height="113dp"
+        app:srcCompat="@drawable/baseline_book_24"
+        tools:layout_editor_absoluteX="7dp"
+        tools:layout_editor_absoluteY="391dp" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="책 제목"
+        tools:layout_editor_absoluteX="139dp"
+        tools:layout_editor_absoluteY="118dp" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="책 제목"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="261dp" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="책 제목"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.588"
+        tools:layout_editor_absoluteX="138dp" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="저자"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.523"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="125dp" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="저자"
+        android:textSize="10sp"
+        tools:layout_editor_absoluteX="187dp"
+        tools:layout_editor_absoluteY="268dp" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="저자"
+        android:textSize="10sp"
+        tools:layout_editor_absoluteX="187dp"
+        tools:layout_editor_absoluteY="407dp" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="225dp"
+        android:layout_height="80dp"
+        android:hint="입력내용"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="139dp"
+        tools:layout_editor_absoluteY="141dp" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="225dp"
+        android:layout_height="81dp"
+        android:hint="입력내용"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="284dp" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="224dp"
+        android:layout_height="82dp"
+        android:hint="입력내용"
+        android:textSize="12sp"
+        tools:layout_editor_absoluteX="138dp"
+        tools:layout_editor_absoluteY="419dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

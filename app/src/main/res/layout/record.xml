@@ -62,9 +62,29 @@
         android:id="@+id/buttonSubmit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="입력하기"
+        android:layout_margin="16dp"
+        android:text="저장하기"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="16dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextText"
+        android:layout_width="242dp"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="저자"
+        android:inputType="text"
+        tools:layout_editor_absoluteX="136dp"
+        tools:layout_editor_absoluteY="63dp" />
+
+    <EditText
+        android:id="@+id/editTextText2"
+        android:layout_width="244dp"
+        android:layout_height="47dp"
+        android:ems="10"
+        android:hint="출판사"
+        android:inputType="text"
+        tools:layout_editor_absoluteX="136dp"
+        tools:layout_editor_absoluteY="109dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
