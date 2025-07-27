@@ -14,6 +14,7 @@
         android:layout_width="115dp"
         android:layout_height="113dp"
         android:layout_marginStart="8dp"
+        android:tint="#D5C3F2"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/baseline_book_24"
         tools:layout_editor_absoluteY="109dp" />
@@ -22,6 +23,7 @@
         android:id="@+id/imageView7"
         android:layout_width="115dp"
         android:layout_height="113dp"
+        android:tint="#9C79DB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +34,7 @@
         android:id="@+id/imageView8"
         android:layout_width="115dp"
         android:layout_height="113dp"
+        android:tint="#673AB7"
         app:srcCompat="@drawable/baseline_book_24"
         tools:layout_editor_absoluteX="7dp"
         tools:layout_editor_absoluteY="391dp" />
@@ -117,5 +120,18 @@
         android:textSize="12sp"
         tools:layout_editor_absoluteX="138dp"
         tools:layout_editor_absoluteY="419dp" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:text="기록"
+        android:textColor="#673AB7"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
