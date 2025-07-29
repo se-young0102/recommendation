@@ -122,32 +122,4 @@ class BookDatabaseHelper(context: Context) :
         cursor.close()
         return bookList
     }
-
-    // 제목에 입력 문자열 포함하는 책 리스트 반환 (검색용)
-    fun searchBooksByTitle(keyword: String): List<BookItem> {
-        val bookList = mutableListOf<BookItem>()
-        val db = readableDatabase
-        val cursor = db.query(
-            TABLE_NAME,
-            arrayOf(COLUMN_ID, COLUMN_TITLE, COLUMN_AUTHOR, COLUMN_PUBLISHER, COLUMN_CONTENT, COLUMN_COVER_URI),
-            "$COLUMN_TITLE LIKE ?",
-            arrayOf("%$keyword%"),
-            null, null,
-            "$COLUMN_ID DESC"
-        )
-        if (cursor.moveToFirst()) {
-            do {
-                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
-                val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE))
-                val author = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR))
-                val publisher = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PUBLISHER))
-                val content = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CONTENT))
-                val coverUri = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_COVER_URI))
-
-                bookList.add(BookItem(id, title, author, publisher, content, coverUri))
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
-        return bookList
-    }
 }
