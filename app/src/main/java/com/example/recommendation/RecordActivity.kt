@@ -2,13 +2,12 @@ package com.example.recommendation
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class RecordActivity : AppCompatActivity() {
 
@@ -19,11 +18,11 @@ class RecordActivity : AppCompatActivity() {
     private lateinit var imageViewCover: ImageView
 
     private val REQUEST_CODE_PICK_IMAGE = 1001
-    private var selectedImageUri: Uri? = null
+    private var savedImagePath: String? = null
 
     private lateinit var dbHelper: BookDatabaseHelper
 
-    private var editingBookId: Int? = null // 수정 모드 식별자
+    private var editingBookId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +38,7 @@ class RecordActivity : AppCompatActivity() {
 
         val buttonSelectImage = findViewById<Button>(R.id.buttonSelectImage)
         val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
-        val buttonHome = findViewById<Button>(R.id.buttonHome)
 
-        // Intent로 넘어온 데이터 받기 (수정 모드)
         editingBookId = intent.getIntExtra("book_id", -1).takeIf { it != -1 }
         if (editingBookId != null) {
             editTextTitle.setText(intent.getStringExtra("title") ?: "")
@@ -49,22 +46,17 @@ class RecordActivity : AppCompatActivity() {
             editTextPublisher.setText(intent.getStringExtra("publisher") ?: "")
             editTextContent.setText(intent.getStringExtra("content") ?: "")
 
-            val coverUriString = intent.getStringExtra("coverUri")
-            if (!coverUriString.isNullOrEmpty()) {
-                try {
-                    selectedImageUri = Uri.parse(coverUriString)
-                    imageViewCover.setImageURI(selectedImageUri)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    imageViewCover.setImageResource(R.drawable.baseline_book_24)
-                }
-            } else {
-                imageViewCover.setImageResource(R.drawable.baseline_book_24)
+            val path = intent.getStringExtra("coverPath")
+            if (!path.isNullOrEmpty()) {
+                savedImagePath = path
+                val bitmap = BitmapFactory.decodeFile(path)
+                if (bitmap != null) imageViewCover.setImageBitmap(bitmap)
+                else imageViewCover.setImageResource(R.drawable.baseline_book_24)
             }
         }
 
         buttonSelectImage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK).apply {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 type = "image/*"
             }
             startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
@@ -75,7 +67,6 @@ class RecordActivity : AppCompatActivity() {
             val author = editTextAuthor.text.toString().trim()
             val publisher = editTextPublisher.text.toString().trim()
             val content = editTextContent.text.toString().trim()
-            val coverUriString = selectedImageUri?.toString()
 
             if (title.isEmpty()) {
                 Toast.makeText(this, "책 제목을 입력하세요", Toast.LENGTH_SHORT).show()
@@ -85,7 +76,7 @@ class RecordActivity : AppCompatActivity() {
                 Toast.makeText(this, "저자를 입력하세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (selectedImageUri == null) {
+            if (savedImagePath == null) {
                 Toast.makeText(this, "책 표지 이미지를 선택해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -97,7 +88,7 @@ class RecordActivity : AppCompatActivity() {
                     author = author,
                     publisher = if (publisher.isEmpty()) null else publisher,
                     content = if (content.isEmpty()) null else content,
-                    coverUri = coverUriString
+                    coverUri = savedImagePath
                 )
             } else {
                 dbHelper.insertBook(
@@ -105,34 +96,48 @@ class RecordActivity : AppCompatActivity() {
                     author = author,
                     publisher = if (publisher.isEmpty()) null else publisher,
                     content = if (content.isEmpty()) null else content,
-                    coverUri = coverUriString
+                    coverUri = savedImagePath
                 )
             }
 
             if (success) {
                 Toast.makeText(this, "저장되었습니다", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, BookData::class.java))
                 finish()
             } else {
                 Toast.makeText(this, "저장에 실패했습니다", Toast.LENGTH_SHORT).show()
             }
-        }
-
-        buttonHome.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            })
-            finish()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            selectedImageUri = data?.data
-            if (selectedImageUri != null) {
-                imageViewCover.setImageURI(selectedImageUri)
+            data?.data?.let { uri ->
+                val path = copyImageToInternalStorage(uri)
+                if (path != null) {
+                    savedImagePath = path
+                    val bitmap = BitmapFactory.decodeFile(path)
+                    imageViewCover.setImageBitmap(bitmap)
+                } else {
+                    Toast.makeText(this, "이미지 저장 실패", Toast.LENGTH_SHORT).show()
+                }
             }
+        }
+    }
+
+    private fun copyImageToInternalStorage(uri: Uri): String? {
+        val filename = "cover_${System.currentTimeMillis()}.jpg"
+        val file = File(filesDir, filename)
+        return try {
+            contentResolver.openInputStream(uri).use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream?.copyTo(outputStream)
+                }
+            }
+            file.absolutePath
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 }

@@ -2,7 +2,6 @@ package com.example.recommendation
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import java.io.File
 
 class BookData : AppCompatActivity() {
 
@@ -54,18 +52,18 @@ class BookData : AppCompatActivity() {
             textPublisher.text = book.publisher ?: "출판사 정보 없음"
 
             if (!book.coverUri.isNullOrEmpty()) {
-                val file = File(Uri.parse(book.coverUri).path ?: "")
-                if (file.exists()) {
-                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                    imageView.setImageBitmap(bitmap)
-                } else {
+                try {
+                    val uri = Uri.parse(book.coverUri)
+                    imageView.setImageURI(uri)
+                } catch (e: Exception) {
+                    e.printStackTrace()
                     imageView.setImageResource(R.drawable.baseline_book_24)
                 }
             } else {
                 imageView.setImageResource(R.drawable.baseline_book_24)
             }
 
-            // 수정 버튼 클릭 시 안전하게 데이터 전달
+            // 수정 버튼 클릭 시
             buttonEdit.setOnClickListener {
                 val intent = Intent(this, RecordActivity::class.java).apply {
                     putExtra("book_id", book.id)
@@ -83,7 +81,7 @@ class BookData : AppCompatActivity() {
                 val success = dbHelper.deleteBook(book.id)
                 if (success) {
                     Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show()
-                    recreate() // 화면 새로고침
+                    recreate()
                 } else {
                     Toast.makeText(this, "삭제 실패", Toast.LENGTH_SHORT).show()
                 }
