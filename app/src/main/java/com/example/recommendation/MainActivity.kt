@@ -30,9 +30,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, BookData::class.java))
         }
 
-        // 도서추천 버튼 (추후 기능 추가)
         findViewById<Button>(R.id.button3).setOnClickListener {
-            // TODO: 추천 기능 추가
+            startActivity(Intent(this, RecommendActivity::class.java))
         }
 
         // 내가 읽은 도서 영역에 DB에서 제목 넣기

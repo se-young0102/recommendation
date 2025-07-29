@@ -6,4 +6,10 @@
     <item name="editTextContent" type="id" />
     <item name="buttonSubmit" type="id" />
     <item name="imageViewCheckCover" type="id" />
+    <item name="recentBookTitle1" type="id" />
+    <item name="recentBookTitle2" type="id" />
+    <item name="recentBookTitle3" type="id" />
+    <item name="popularBookTitle1" type="id" />
+    <item name="popularBookTitle2" type="id" />
+    <item name="popularBookTitle3" type="id" />
 </resources>

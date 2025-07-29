@@ -1,116 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <!-- 홈 버튼 -->
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="58dp"
-        android:layout_height="37dp"
-        android:text="홈"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- 타이틀 -->
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="사용자를 위한 추천"
-        android:textColor="#673AB7"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/button4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- 섹션 제목 -->
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="최근 읽은 책과 비슷한 장르의 책"
-        android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/textView16"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="24dp" />
+        <!-- 홈 버튼 -->
+        <Button
+            android:id="@+id/buttonHome"
+            android:layout_width="58dp"
+            android:layout_height="37dp"
+            android:text="홈" />
 
-    <!-- 최근 읽은 책과 비슷한 책 3개 -->
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="113dp"
-        android:layout_height="103dp"
-        app:srcCompat="@drawable/baseline_book_24"
-        app:layout_constraintTop_toBottomOf="@id/textView22"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="12dp"
-        app:tint="#C1ACE6" />
+        <!-- 타이틀 -->
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사용자를 위한 추천"
+            android:textColor="#673AB7"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center_horizontal" />
 
-    <ImageView
-        android:id="@+id/imageView21"
-        android:layout_width="113dp"
-        android:layout_height="103dp"
-        app:srcCompat="@drawable/baseline_book_24"
-        app:layout_constraintTop_toTopOf="@id/imageView9"
-        app:layout_constraintStart_toEndOf="@id/imageView9"
-        android:layout_marginStart="16dp"
-        app:tint="#C1ACE6" />
+        <!-- 섹션 제목 -->
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="최근 읽은 책과 비슷한 장르의 책"
+            android:textSize="12sp"
+            android:layout_marginTop="24dp" />
 
-    <ImageView
-        android:id="@+id/imageView11"
-        android:layout_width="113dp"
-        android:layout_height="103dp"
-        app:srcCompat="@drawable/baseline_book_24"
-        app:layout_constraintTop_toTopOf="@id/imageView9"
-        app:layout_constraintStart_toEndOf="@id/imageView21"
-        android:layout_marginStart="16dp"
-        app:tint="#C1ACE6" />
+        <!-- 최근 읽은 책과 비슷한 책 3개: 가로 LinearLayout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
 
-    <!-- 인기 책 섹션 제목 -->
-    <TextView
-        android:id="@+id/textView23"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="현재 인기 TOP 10 책"
-        android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@id/imageView9"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="32dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
 
-    <!-- 인기 책 3개 -->
-    <ImageView
-        android:id="@+id/imageView15"
-        android:layout_width="113dp"
-        android:layout_height="103dp"
-        app:srcCompat="@drawable/baseline_book_24"
-        app:layout_constraintTop_toBottomOf="@id/textView23"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="12dp"
-        app:tint="#C1ACE6" />
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="match_parent"
+                    android:layout_height="103dp"
+                    android:src="@drawable/baseline_book_24"
+                    app:tint="#C1ACE6" />
 
-    <ImageView
-        android:id="@+id/imageView17"
-        android:layout_width="113dp"
-        android:layout_height="103dp"
-        app:srcCompat="@drawable/baseline_book_24"
-        app:layout_constraintTop_toTopOf="@id/imageView15"
-        app:layout_constraintStart_toEndOf="@id/imageView15"
-        android:layout_marginStart="16dp"
-        app:tint="#C1ACE6" />
+                <TextView
+                    android:id="@+id/recentBookTitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="책 제목 1"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView14"
-        android:layout_width="113dp"
-        android:layout_height="103dp"
-        app:srcCompat="@drawable/baseline_book_24"
-        app:layout_constraintTop_toTopOf="@id/imageView15"
-        app:layout_constraintStart_toEndOf="@id/imageView17"
-        android:layout_marginStart="16dp"
-        app:tint="#C1ACE6" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/imageView21"
+                    android:layout_width="match_parent"
+                    android:layout_height="103dp"
+                    android:src="@drawable/baseline_book_24"
+                    app:tint="#C1ACE6" />
+
+                <TextView
+                    android:id="@+id/recentBookTitle2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="책 제목 2"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp">
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="match_parent"
+                    android:layout_height="103dp"
+                    android:src="@drawable/baseline_book_24"
+                    app:tint="#C1ACE6" />
+
+                <TextView
+                    android:id="@+id/recentBookTitle3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="책 제목 3"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 인기 책 섹션 제목 -->
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="현재 인기 TOP 10 책"
+            android:textSize="12sp"
+            android:layout_marginTop="32dp" />
+
+        <!-- 인기 책 3개: 가로 LinearLayout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView15"
+                    android:layout_width="match_parent"
+                    android:layout_height="103dp"
+                    android:src="@drawable/baseline_book_24"
+                    app:tint="#C1ACE6" />
+
+                <TextView
+                    android:id="@+id/popularBookTitle1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="인기 책 1"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp">
+
+                <ImageView
+                    android:id="@+id/imageView17"
+                    android:layout_width="match_parent"
+                    android:layout_height="103dp"
+                    android:src="@drawable/baseline_book_24"
+                    app:tint="#C1ACE6" />
+
+                <TextView
+                    android:id="@+id/popularBookTitle2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="인기 책 2"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp">
+
+                <ImageView
+                    android:id="@+id/imageView14"
+                    android:layout_width="match_parent"
+                    android:layout_height="103dp"
+                    android:src="@drawable/baseline_book_24"
+                    app:tint="#C1ACE6" />
+
+                <TextView
+                    android:id="@+id/popularBookTitle3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="인기 책 3"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
+
