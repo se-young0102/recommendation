@@ -5,4 +5,5 @@
     <item name="editTextTitle" type="id" />
     <item name="editTextContent" type="id" />
     <item name="buttonSubmit" type="id" />
+    <item name="imageViewCheckCover" type="id" />
 </resources>
