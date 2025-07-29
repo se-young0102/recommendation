@@ -4,13 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 
 class BookData : AppCompatActivity() {
 
@@ -51,12 +49,19 @@ class BookData : AppCompatActivity() {
             textAuthor.text = book.author
             textPublisher.text = book.publisher ?: "출판사 정보 없음"
 
+            // 이미지 Glide로 불러오기
             if (!book.coverUri.isNullOrEmpty()) {
                 try {
                     val uri = Uri.parse(book.coverUri)
-                    imageView.setImageURI(uri)
+                    Glide.with(this)
+                        .load(uri)
+                        .placeholder(R.drawable.baseline_book_24)
+                        .error(R.drawable.baseline_book_24)
+                        .into(imageView)
+
+                    Log.d("BookData", "이미지 로딩 성공: ${book.coverUri}")
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e("BookData", "이미지 로딩 실패: ${book.coverUri}", e)
                     imageView.setImageResource(R.drawable.baseline_book_24)
                 }
             } else {

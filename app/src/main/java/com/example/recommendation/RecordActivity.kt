@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 
 class RecordActivity : AppCompatActivity() {
 
@@ -23,7 +24,7 @@ class RecordActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: BookDatabaseHelper
 
-    private var editingBookId: Int? = null // 수정 모드 식별자
+    private var editingBookId: Int? = null // 수정 모드 여부를 판별하는 변수
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,7 @@ class RecordActivity : AppCompatActivity() {
 
         dbHelper = BookDatabaseHelper(this)
 
+        // 뷰 초기화
         editTextTitle = findViewById(R.id.editTextTitle)
         editTextAuthor = findViewById(R.id.editTextAuthor)
         editTextPublisher = findViewById(R.id.editTextPublisher)
@@ -41,21 +43,27 @@ class RecordActivity : AppCompatActivity() {
         val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
         val buttonHome = findViewById<Button>(R.id.buttonHome)
 
-        // Intent로 넘어온 데이터 받기 (수정 모드)
+        // ✅ 수정 모드 여부 체크 및 값 설정
         editingBookId = intent.getIntExtra("book_id", -1).takeIf { it != -1 }
+
         if (editingBookId != null) {
-            editTextTitle.setText(intent.getStringExtra("title"))
-            editTextAuthor.setText(intent.getStringExtra("author"))
-            editTextPublisher.setText(intent.getStringExtra("publisher"))
-            editTextContent.setText(intent.getStringExtra("content"))
+            editTextTitle.setText(intent.getStringExtra("title") ?: "")
+            editTextAuthor.setText(intent.getStringExtra("author") ?: "")
+            editTextPublisher.setText(intent.getStringExtra("publisher") ?: "")
+            editTextContent.setText(intent.getStringExtra("content") ?: "")
 
             val coverUriString = intent.getStringExtra("coverUri")
             if (!coverUriString.isNullOrEmpty()) {
                 selectedImageUri = Uri.parse(coverUriString)
-                imageViewCover.setImageURI(selectedImageUri)
+                Glide.with(this)
+                    .load(selectedImageUri)
+                    .placeholder(R.drawable.baseline_book_24)
+                    .error(R.drawable.baseline_book_24)
+                    .into(imageViewCover)
             }
         }
 
+        // ✅ 이미지 선택 버튼
         buttonSelectImage.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK).apply {
                 type = "image/*"
@@ -63,6 +71,7 @@ class RecordActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
         }
 
+        // ✅ 저장 버튼 (등록 또는 수정)
         buttonSubmit.setOnClickListener {
             val title = editTextTitle.text.toString().trim()
             val author = editTextAuthor.text.toString().trim()
@@ -74,16 +83,19 @@ class RecordActivity : AppCompatActivity() {
                 Toast.makeText(this, "책 제목을 입력하세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             if (author.isEmpty()) {
                 Toast.makeText(this, "저자를 입력하세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             if (selectedImageUri == null) {
                 Toast.makeText(this, "책 표지 이미지를 선택해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val success = if (editingBookId != null) {
+                // ✅ 수정
                 dbHelper.updateBook(
                     id = editingBookId!!,
                     title = title,
@@ -93,6 +105,7 @@ class RecordActivity : AppCompatActivity() {
                     coverUri = coverUriString
                 )
             } else {
+                // ✅ 새로 추가
                 dbHelper.insertBook(
                     title = title,
                     author = author,
@@ -111,6 +124,7 @@ class RecordActivity : AppCompatActivity() {
             }
         }
 
+        // 홈으로 돌아가기
         buttonHome.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -119,6 +133,7 @@ class RecordActivity : AppCompatActivity() {
         }
     }
 
+    // ✅ 이미지 선택 결과 처리
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {

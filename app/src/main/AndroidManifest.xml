@@ -38,6 +38,7 @@
             android:name=".BookData"
             android:exported="false"
             tools:ignore="Instantiatable" />
+
         <activity
             android:name=".RecommendActivity"
             android:exported="false"
@@ -46,4 +47,6 @@
     </application>
     <uses-permission android:name="android.permission.INTERNET"
         tools:ignore="WrongManifestParent" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 </manifest>
