@@ -1,27 +1,95 @@
 package com.example.recommendation
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
 
 class BookData : AppCompatActivity() {
+
+    private lateinit var dbHelper: BookDatabaseHelper
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.check) // check.xml 연결
+        setContentView(R.layout.check)
 
-        val imageView = findViewById<ImageView>(R.id.imageViewCheckCover)
+        dbHelper = BookDatabaseHelper(this)
 
-        // SharedPreferences에서 URI 불러오기
-        val prefs = getSharedPreferences("book_pref", MODE_PRIVATE)
-        val uriString = prefs.getString("book_cover_uri", null)
+        val buttonHome = findViewById<Button>(R.id.button_home)
+        buttonHome.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            })
+            finish()
+        }
 
-        if (uriString != null) {
-            val imageUri = Uri.parse(uriString)
+        val container = findViewById<LinearLayout>(R.id.containerBookList)
+        container.removeAllViews()
 
+        val bookList = dbHelper.getAllBooks()
+        val inflater = LayoutInflater.from(this)
+
+        for (book in bookList) {
+            val itemView = inflater.inflate(R.layout.item_book, container, false)
+
+            val imageView = itemView.findViewById<ImageView>(R.id.imageViewCoverItem)
+            val textTitle = itemView.findViewById<TextView>(R.id.textTitleItem)
+            val textAuthor = itemView.findViewById<TextView>(R.id.textAuthorItem)
+            val textPublisher = itemView.findViewById<TextView>(R.id.textPublisherItem)
+            val buttonEdit = itemView.findViewById<Button>(R.id.buttonEdit)
+            val buttonDelete = itemView.findViewById<Button>(R.id.buttonDelete)
+
+            textTitle.text = book.title
+            textAuthor.text = book.author
+            textPublisher.text = book.publisher ?: "출판사 정보 없음"
+
+            if (!book.coverUri.isNullOrEmpty()) {
+                val file = File(Uri.parse(book.coverUri).path ?: "")
+                if (file.exists()) {
+                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    imageView.setImageBitmap(bitmap)
+                } else {
+                    imageView.setImageResource(R.drawable.baseline_book_24)
+                }
+            } else {
+                imageView.setImageResource(R.drawable.baseline_book_24)
+            }
+
+            // 수정 버튼 클릭 시
+            buttonEdit.setOnClickListener {
+                val intent = Intent(this, RecordActivity::class.java).apply {
+                    putExtra("book_id", book.id)
+                    putExtra("title", book.title)
+                    putExtra("author", book.author)
+                    putExtra("publisher", book.publisher)
+                    putExtra("content", book.content)
+                    putExtra("coverUri", book.coverUri)
+                }
+                startActivity(intent)
+            }
+
+            // 삭제 버튼 클릭 시
+            buttonDelete.setOnClickListener {
+                val success = dbHelper.deleteBook(book.id)
+                if (success) {
+                    Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show()
+                    recreate() // 화면 새로고침으로 목록 업데이트
+                } else {
+                    Toast.makeText(this, "삭제 실패", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            container.addView(itemView)
         }
     }
 }

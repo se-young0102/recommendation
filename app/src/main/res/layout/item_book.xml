@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imageViewCoverItem"
+        android:layout_width="60dp"
+        android:layout_height="80dp"
+        android:src="@drawable/baseline_book_24"
+        android:contentDescription="책 표지"
+        app:tint="#D5C3F2" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="8dp">
+
+        <TextView
+            android:id="@+id/textTitleItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="책 제목"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textAuthorItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="저자"
+            android:textSize="12sp"
+            android:textColor="#555555" />
+
+        <TextView
+            android:id="@+id/textPublisherItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="출판사"
+            android:textSize="12sp"
+            android:textColor="#777777" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="end"
+        android:layout_marginStart="4dp">
+
+        <Button
+            android:id="@+id/buttonEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수정"
+            android:textSize="10sp"
+            android:padding="2dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:backgroundTint="#DDDDDD" />
+
+        <Button
+            android:id="@+id/buttonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="삭제"
+            android:textSize="10sp"
+            android:padding="2dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:layout_marginTop="4dp"
+            android:backgroundTint="#FFDDDD" />
+    </LinearLayout>
+</LinearLayout>
