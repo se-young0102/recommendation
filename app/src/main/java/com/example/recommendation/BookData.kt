@@ -65,15 +65,15 @@ class BookData : AppCompatActivity() {
                 imageView.setImageResource(R.drawable.baseline_book_24)
             }
 
-            // 수정 버튼 클릭 시
+            // 수정 버튼 클릭 시 안전하게 데이터 전달
             buttonEdit.setOnClickListener {
                 val intent = Intent(this, RecordActivity::class.java).apply {
                     putExtra("book_id", book.id)
-                    putExtra("title", book.title)
-                    putExtra("author", book.author)
-                    putExtra("publisher", book.publisher)
-                    putExtra("content", book.content)
-                    putExtra("coverUri", book.coverUri)
+                    putExtra("title", book.title ?: "")
+                    putExtra("author", book.author ?: "")
+                    putExtra("publisher", book.publisher ?: "")
+                    putExtra("content", book.content ?: "")
+                    putExtra("coverUri", book.coverUri ?: "")
                 }
                 startActivity(intent)
             }
@@ -83,7 +83,7 @@ class BookData : AppCompatActivity() {
                 val success = dbHelper.deleteBook(book.id)
                 if (success) {
                     Toast.makeText(this, "삭제되었습니다", Toast.LENGTH_SHORT).show()
-                    recreate() // 화면 새로고침으로 목록 업데이트
+                    recreate() // 화면 새로고침
                 } else {
                     Toast.makeText(this, "삭제 실패", Toast.LENGTH_SHORT).show()
                 }

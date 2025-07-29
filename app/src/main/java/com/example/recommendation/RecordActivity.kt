@@ -44,15 +44,22 @@ class RecordActivity : AppCompatActivity() {
         // Intent로 넘어온 데이터 받기 (수정 모드)
         editingBookId = intent.getIntExtra("book_id", -1).takeIf { it != -1 }
         if (editingBookId != null) {
-            editTextTitle.setText(intent.getStringExtra("title"))
-            editTextAuthor.setText(intent.getStringExtra("author"))
-            editTextPublisher.setText(intent.getStringExtra("publisher"))
-            editTextContent.setText(intent.getStringExtra("content"))
+            editTextTitle.setText(intent.getStringExtra("title") ?: "")
+            editTextAuthor.setText(intent.getStringExtra("author") ?: "")
+            editTextPublisher.setText(intent.getStringExtra("publisher") ?: "")
+            editTextContent.setText(intent.getStringExtra("content") ?: "")
 
             val coverUriString = intent.getStringExtra("coverUri")
             if (!coverUriString.isNullOrEmpty()) {
-                selectedImageUri = Uri.parse(coverUriString)
-                imageViewCover.setImageURI(selectedImageUri)
+                try {
+                    selectedImageUri = Uri.parse(coverUriString)
+                    imageViewCover.setImageURI(selectedImageUri)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    imageViewCover.setImageResource(R.drawable.baseline_book_24)
+                }
+            } else {
+                imageViewCover.setImageResource(R.drawable.baseline_book_24)
             }
         }
 
