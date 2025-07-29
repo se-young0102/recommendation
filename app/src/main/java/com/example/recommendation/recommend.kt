@@ -23,10 +23,14 @@ class RecommendActivity : AppCompatActivity() {
     private lateinit var recentBookTitles: List<TextView>
     private lateinit var popularBookTitles: List<TextView>
 
+    private lateinit var dbHelper: BookDatabaseHelper
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.recommend)
+
+        dbHelper = BookDatabaseHelper(this)
 
         recentBookTitles = listOf(
             findViewById(R.id.recentBookTitle1),
@@ -39,7 +43,6 @@ class RecommendActivity : AppCompatActivity() {
             findViewById(R.id.popularBookTitle3)
         )
 
-        // 홈 버튼 클릭 시 MainActivity로 이동
         findViewById<Button>(R.id.buttonHome).setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -49,7 +52,13 @@ class RecommendActivity : AppCompatActivity() {
 
         // 최근 읽은 책과 비슷한 책 추천 요청
         CoroutineScope(Dispatchers.Main).launch {
-            val recentPrompt = "사용자가 최근에 읽은 책과 비슷한 장르의 책 3권을 추천해줘. 제목만 알려줘. 번호나 부가 설명 없이 책 제목만 쉼표로 구분해서 알려줘."
+            val recentReadBooks = getRecentBookTitles(3)
+            val recentPrompt = if (recentReadBooks.isNotEmpty()) {
+                "사용자가 최근에 읽은 책들: ${recentReadBooks.joinToString(", ")}. 이와 비슷한 장르의 책 3권을 추천해줘. 제목만 알려줘. 번호나 부가 설명 없이 책 제목만 쉼표로 구분해서 알려줘."
+            } else {
+                "사용자가 최근에 읽은 책과 비슷한 장르의 책 3권을 추천해줘. 제목만 알려줘. 번호나 부가 설명 없이 책 제목만 쉼표로 구분해서 알려줘."
+            }
+
             val recommendations = fetchRecommendation(recentPrompt)
             val bookTitles = parseBookTitles(recommendations)
 
@@ -111,6 +120,11 @@ class RecommendActivity : AppCompatActivity() {
             .map { it.trim() }
             .filter { it.isNotEmpty() }
             .map { it.replace(Regex("^\\d+\\.?\\s*"), "") }
+    }
+
+    private fun getRecentBookTitles(limit: Int): List<String> {
+        val books = dbHelper.getAllBooks()  // 최신순 정렬로 받아옴
+        return books.take(limit).map { it.title }
     }
 
     data class GeminiResponse(val candidates: List<Candidate>?)
