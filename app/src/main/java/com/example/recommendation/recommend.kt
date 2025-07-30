@@ -15,6 +15,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.concurrent.TimeUnit
 
 class RecommendActivity : AppCompatActivity() {
 
@@ -27,6 +28,15 @@ class RecommendActivity : AppCompatActivity() {
     private lateinit var popularImageViews: List<ImageView>
 
     private lateinit var dbHelper: BookDatabaseHelper
+
+    // 1. OkHttpClient를 전역에서 한 번만 생성하고 재사용
+    private val httpClient: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)  // 연결 시간 제한
+            .readTimeout(10, TimeUnit.SECONDS)     // 응답 대기 시간 제한
+            .writeTimeout(10, TimeUnit.SECONDS)    // 쓰기 시간 제한
+            .build()
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +93,7 @@ class RecommendActivity : AppCompatActivity() {
         }
 
         CoroutineScope(Dispatchers.Main).launch {
-            val popularPrompt = "요즘 인기 있는 베스트셀러 책 3권을 알아서 추천해줘. 제목만 알려줘. 번호나 부가 설명 없이 책 제목만 쉼표로 구분해서 알려줘."
+            val popularPrompt = "요즘 인기 있는 베스트셀러 책 3권을 알아서 추천해줘. 진짜 순위 실시간 변동으로 이런 거 상관없어 그냥 무조건 3개 추천해줘야해. 제목만 알려줘. 번호나 부가 설명 없이 책 제목만 쉼표로 구분해서 알려줘."
             val recommendations = fetchRecommendation(popularPrompt)
             val bookTitles = parseBookTitles(recommendations)
 
@@ -138,7 +148,6 @@ class RecommendActivity : AppCompatActivity() {
 
     private suspend fun fetchRecommendation(prompt: String): String = withContext(Dispatchers.IO) {
         try {
-            val client = OkHttpClient()
             val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
 
             val payload = mapOf(
@@ -157,14 +166,14 @@ class RecommendActivity : AppCompatActivity() {
                 .post(requestBody)
                 .build()
 
-            client.newCall(request).execute().use { response ->
+            httpClient.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) return@withContext "API 호출 실패: ${response.code}"
                 val body = response.body?.string() ?: return@withContext "응답 없음"
                 val result = Gson().fromJson(body, GeminiResponse::class.java)
                 return@withContext result.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text ?: "추천 결과 없음"
             }
         } catch (e: Exception) {
-            return@withContext "오류 발생: ${e.message}"
+            return@withContext "오류 발생: ${e.message ?: "알 수 없는 오류"}"
         }
     }
 
