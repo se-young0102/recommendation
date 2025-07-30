@@ -59,7 +59,7 @@ class BookData : AppCompatActivity() {
                         .error(R.drawable.baseline_book_24)
                         .into(imageView)
 
-                    Log.d("BookData", "이미지 로딩 성공: ${book.coverUri}")
+                    Log.d("BookData", "이미지 로딩 성공: $uri")
                 } catch (e: Exception) {
                     Log.e("BookData", "이미지 로딩 실패: ${book.coverUri}", e)
                     imageView.setImageResource(R.drawable.baseline_book_24)
@@ -68,20 +68,18 @@ class BookData : AppCompatActivity() {
                 imageView.setImageResource(R.drawable.baseline_book_24)
             }
 
-            // 수정 버튼 클릭 시
             buttonEdit.setOnClickListener {
                 val intent = Intent(this, RecordActivity::class.java).apply {
                     putExtra("book_id", book.id)
-                    putExtra("title", book.title ?: "")
-                    putExtra("author", book.author ?: "")
-                    putExtra("publisher", book.publisher ?: "")
-                    putExtra("content", book.content ?: "")
-                    putExtra("coverUri", book.coverUri ?: "")
+                    putExtra("title", book.title)
+                    putExtra("author", book.author)
+                    putExtra("publisher", book.publisher)
+                    putExtra("content", book.content)
+                    putExtra("coverUri", book.coverUri)
                 }
                 startActivity(intent)
             }
 
-            // 삭제 버튼 클릭 시
             buttonDelete.setOnClickListener {
                 val success = dbHelper.deleteBook(book.id)
                 if (success) {

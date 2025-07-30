@@ -9,11 +9,12 @@
 
     <ImageView
         android:id="@+id/imageViewCoverItem"
-        android:layout_width="60dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
         android:src="@drawable/baseline_book_24"
-        android:contentDescription="책 표지"
-        app:tint="#D5C3F2" />
+        android:contentDescription="책 표지" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -27,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="책 제목"
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -35,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="저자"
-            android:textSize="12sp"
+            android:textSize="18sp"
             android:textColor="#555555" />
 
         <TextView
@@ -43,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="출판사"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textColor="#777777" />
     </LinearLayout>
 
@@ -59,8 +60,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="수정"
-            android:textSize="10sp"
-            android:padding="2dp"
+            android:textSize="15sp"
+            android:padding="4dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:backgroundTint="#DDDDDD" />
@@ -70,8 +71,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="삭제"
-            android:textSize="10sp"
-            android:padding="2dp"
+            android:textSize="15sp"
+            android:padding="4dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:layout_marginTop="4dp"

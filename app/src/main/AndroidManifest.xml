@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 외부 저장소 읽기 권한 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +17,6 @@
         android:theme="@style/Theme.Recommendation"
         tools:targetApi="31">
 
-        <!-- 메인 액티비티, 런처 역할 -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,13 +26,11 @@
             </intent-filter>
         </activity>
 
-        <!-- 기록 액티비티 -->
         <activity
             android:name=".RecordActivity"
             android:exported="false"
             tools:ignore="Instantiatable" />
 
-        <!-- 도서 데이터 액티비티 -->
         <activity
             android:name=".BookData"
             android:exported="false"
@@ -45,8 +42,5 @@
             tools:ignore="Instantiatable" />
 
     </application>
-    <uses-permission android:name="android.permission.INTERNET"
-        tools:ignore="WrongManifestParent" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

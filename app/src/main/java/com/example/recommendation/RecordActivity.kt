@@ -4,10 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 
@@ -24,7 +21,7 @@ class RecordActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: BookDatabaseHelper
 
-    private var editingBookId: Int? = null // 수정 모드 여부를 판별하는 변수
+    private var editingBookId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +29,6 @@ class RecordActivity : AppCompatActivity() {
 
         dbHelper = BookDatabaseHelper(this)
 
-        // 뷰 초기화
         editTextTitle = findViewById(R.id.editTextTitle)
         editTextAuthor = findViewById(R.id.editTextAuthor)
         editTextPublisher = findViewById(R.id.editTextPublisher)
@@ -43,7 +39,6 @@ class RecordActivity : AppCompatActivity() {
         val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
         val buttonHome = findViewById<Button>(R.id.buttonHome)
 
-        // ✅ 수정 모드 여부 체크 및 값 설정
         editingBookId = intent.getIntExtra("book_id", -1).takeIf { it != -1 }
 
         if (editingBookId != null) {
@@ -51,7 +46,6 @@ class RecordActivity : AppCompatActivity() {
             editTextAuthor.setText(intent.getStringExtra("author") ?: "")
             editTextPublisher.setText(intent.getStringExtra("publisher") ?: "")
             editTextContent.setText(intent.getStringExtra("content") ?: "")
-
             val coverUriString = intent.getStringExtra("coverUri")
             if (!coverUriString.isNullOrEmpty()) {
                 selectedImageUri = Uri.parse(coverUriString)
@@ -63,15 +57,15 @@ class RecordActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ 이미지 선택 버튼
         buttonSelectImage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK).apply {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 type = "image/*"
+                addCategory(Intent.CATEGORY_OPENABLE)
+                flags = Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
             }
             startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
         }
 
-        // ✅ 저장 버튼 (등록 또는 수정)
         buttonSubmit.setOnClickListener {
             val title = editTextTitle.text.toString().trim()
             val author = editTextAuthor.text.toString().trim()
@@ -95,22 +89,20 @@ class RecordActivity : AppCompatActivity() {
             }
 
             val success = if (editingBookId != null) {
-                // ✅ 수정
                 dbHelper.updateBook(
                     id = editingBookId!!,
                     title = title,
                     author = author,
-                    publisher = if (publisher.isEmpty()) null else publisher,
-                    content = if (content.isEmpty()) null else content,
+                    publisher = publisher.takeIf { it.isNotEmpty() },
+                    content = content.takeIf { it.isNotEmpty() },
                     coverUri = coverUriString
                 )
             } else {
-                // ✅ 새로 추가
                 dbHelper.insertBook(
                     title = title,
                     author = author,
-                    publisher = if (publisher.isEmpty()) null else publisher,
-                    content = if (content.isEmpty()) null else content,
+                    publisher = publisher.takeIf { it.isNotEmpty() },
+                    content = content.takeIf { it.isNotEmpty() },
                     coverUri = coverUriString
                 )
             }
@@ -124,7 +116,6 @@ class RecordActivity : AppCompatActivity() {
             }
         }
 
-        // 홈으로 돌아가기
         buttonHome.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -133,12 +124,19 @@ class RecordActivity : AppCompatActivity() {
         }
     }
 
-    // ✅ 이미지 선택 결과 처리
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             selectedImageUri = data?.data
             if (selectedImageUri != null) {
+                try {
+                    contentResolver.takePersistableUriPermission(
+                        selectedImageUri!!,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (e: SecurityException) {
+                    e.printStackTrace()
+                }
                 imageViewCover.setImageURI(selectedImageUri)
             }
         }

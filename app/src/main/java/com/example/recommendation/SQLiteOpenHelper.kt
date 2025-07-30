@@ -49,14 +49,7 @@ class BookDatabaseHelper(context: Context) :
         onCreate(db)
     }
 
-    // 삽입
-    fun insertBook(
-        title: String,
-        author: String,
-        publisher: String?,
-        content: String?,
-        coverUri: String?
-    ): Boolean {
+    fun insertBook(title: String, author: String, publisher: String?, content: String?, coverUri: String?): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_TITLE, title)
@@ -65,19 +58,10 @@ class BookDatabaseHelper(context: Context) :
             put(COLUMN_CONTENT, content)
             put(COLUMN_COVER_URI, coverUri)
         }
-        val result = db.insert(TABLE_NAME, null, values)
-        return result != -1L
+        return db.insert(TABLE_NAME, null, values) != -1L
     }
 
-    // 수정
-    fun updateBook(
-        id: Int,
-        title: String,
-        author: String,
-        publisher: String?,
-        content: String?,
-        coverUri: String?
-    ): Boolean {
+    fun updateBook(id: Int, title: String, author: String, publisher: String?, content: String?, coverUri: String?): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_TITLE, title)
@@ -86,25 +70,20 @@ class BookDatabaseHelper(context: Context) :
             put(COLUMN_CONTENT, content)
             put(COLUMN_COVER_URI, coverUri)
         }
-        val result = db.update(TABLE_NAME, values, "$COLUMN_ID = ?", arrayOf(id.toString()))
-        return result > 0
+        return db.update(TABLE_NAME, values, "$COLUMN_ID = ?", arrayOf(id.toString())) > 0
     }
 
-    // 삭제
     fun deleteBook(id: Int): Boolean {
         val db = writableDatabase
-        val result = db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(id.toString()))
-        return result > 0
+        return db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(id.toString())) > 0
     }
 
-    // 전체 조회
     fun getAllBooks(): List<BookItem> {
         val bookList = mutableListOf<BookItem>()
         val db = readableDatabase
         val cursor = db.query(
             TABLE_NAME,
-            arrayOf(COLUMN_ID, COLUMN_TITLE, COLUMN_AUTHOR, COLUMN_PUBLISHER, COLUMN_CONTENT, COLUMN_COVER_URI),
-            null, null, null, null,
+            null, null, null, null, null,
             "$COLUMN_ID DESC"
         )
         if (cursor.moveToFirst()) {

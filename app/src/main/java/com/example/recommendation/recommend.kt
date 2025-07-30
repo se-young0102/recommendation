@@ -18,7 +18,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 class RecommendActivity : AppCompatActivity() {
 
-    private val apiKey = "AIzaSyAvBhGK8GbY5HmaXmHavporccknm_gKeCc"
+    private val apiKey = "AIzaSyCDpGTAPOkUxzP5EQaVVUNf2J5TXQijXHA"
 
     private lateinit var recentBookTitles: List<TextView>
     private lateinit var popularBookTitles: List<TextView>
@@ -35,7 +35,6 @@ class RecommendActivity : AppCompatActivity() {
 
         dbHelper = BookDatabaseHelper(this)
 
-        // 책 제목들
         recentBookTitles = listOf(
             findViewById(R.id.recentBookTitle1),
             findViewById(R.id.recentBookTitle2),
@@ -47,7 +46,6 @@ class RecommendActivity : AppCompatActivity() {
             findViewById(R.id.popularBookTitle3)
         )
 
-        // 책 아이콘들
         recentImageViews = listOf(
             findViewById(R.id.imageView9),
             findViewById(R.id.imageView21),
@@ -59,7 +57,6 @@ class RecommendActivity : AppCompatActivity() {
             findViewById(R.id.imageView14)
         )
 
-        // 홈 버튼
         findViewById<Button>(R.id.buttonHome).setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -67,7 +64,6 @@ class RecommendActivity : AppCompatActivity() {
             finish()
         }
 
-        // 최근 읽은 책 기반 추천
         CoroutineScope(Dispatchers.Main).launch {
             val recentReadBooks = getRecentBookTitles(3)
             val recentPrompt = if (recentReadBooks.isNotEmpty()) {
@@ -86,9 +82,8 @@ class RecommendActivity : AppCompatActivity() {
             }
         }
 
-        // 인기책 추천
         CoroutineScope(Dispatchers.Main).launch {
-            val popularPrompt = "현재 가장 인기 있는 베스트셀러 책 3권을 추천해줘. 제목만 알려줘. 번호나 부가 설명 없이 책 제목만 쉼표로 구분해서 알려줘."
+            val popularPrompt = "요즘 인기 있는 베스트셀러 책 3권을 알아서 추천해줘. 제목만 알려줘. 번호나 부가 설명 없이 책 제목만 쉼표로 구분해서 알려줘."
             val recommendations = fetchRecommendation(popularPrompt)
             val bookTitles = parseBookTitles(recommendations)
 
@@ -99,7 +94,6 @@ class RecommendActivity : AppCompatActivity() {
             }
         }
 
-        // 아이콘 클릭 이벤트 설정
         setImageViewClickEvents()
     }
 
@@ -120,24 +114,23 @@ class RecommendActivity : AppCompatActivity() {
     }
 
     private fun showBookPopup(title: String) {
-        val book = dbHelper.getAllBooks().find { it.title == title }
+        CoroutineScope(Dispatchers.Main).launch {
+            val book = dbHelper.getAllBooks().find { it.title == title }
 
-        if (book != null) {
+            // AI 요약 요청
+            val prompt = "책 제목: \"$title\". 이 책을 한 줄로 소개해줘. 너무 길게 말하지 말고 간단히 알려줘."
+            val aiDescription = fetchRecommendation(prompt)
+
             val message = buildString {
-                append("저자: ${book.author}\n")
-                append("출판사: ${book.publisher ?: "정보 없음"}\n\n")
-                append("내용:\n${book.content ?: "내용 정보 없음"}")
+                if (book != null) {
+                    append("저자: ${book.author}\n\n")
+                }
+                append("$aiDescription")
             }
 
-            AlertDialog.Builder(this)
-                .setTitle(book.title)
+            AlertDialog.Builder(this@RecommendActivity)
+                .setTitle(book?.title ?: title)
                 .setMessage(message)
-                .setPositiveButton("닫기", null)
-                .show()
-        } else {
-            AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage("해당 책의 상세 정보를 찾을 수 없습니다.")
                 .setPositiveButton("닫기", null)
                 .show()
         }
